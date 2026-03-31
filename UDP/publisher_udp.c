@@ -15,7 +15,6 @@ int main() {
     struct sockaddr_in serv_addr;
     MensajeDeportivo msg;
 
-    // 1. Crear socket UDP
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
@@ -29,15 +28,11 @@ int main() {
     printf("=== PUBLICADOR UDP INICIADO ===\n");
     strcpy(msg.topic, "Nacional_vs_Millonarios");
 
-    // 2. Enviar los 10 mensajes requeridos
     for (int i = 1; i <= 10; i++) {
         snprintf(msg.data, MAX_DATA, "Minuto %d: ¡Ataque peligroso! (Datagrama UDP)", i * 9);
-        
-        // Disparar el paquete hacia el Broker
         sendto(sockfd, &msg, sizeof(msg), 0, (const struct sockaddr *)&serv_addr, sizeof(serv_addr));
         printf("[ENVIADO] [%s] -> %s\n", msg.topic, msg.data);
-        
-        sleep(2); // Pausa para la captura limpia
+        sleep(2);
     }
 
     printf("\nTransmisión finalizada.\n");

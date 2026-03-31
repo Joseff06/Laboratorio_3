@@ -15,7 +15,6 @@ int main() {
     struct sockaddr_in serv_addr;
     MensajeDeportivo msg;
 
-    // 1. Crear socket UDP
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
@@ -28,14 +27,12 @@ int main() {
 
     printf("=== SUSCRIPTOR UDP INICIADO ===\n");
 
-    // 2. Enviar mensaje de suscripción
     strcpy(msg.data, "SUBSCRIBE");
     strcpy(msg.topic, "Nacional_vs_Millonarios");
     
     sendto(sockfd, &msg, sizeof(msg), 0, (const struct sockaddr *)&serv_addr, sizeof(serv_addr));
     printf("Solicitud de suscripción enviada para: %s\nEsperando datagramas...\n\n", msg.topic);
 
-    // 3. Bucle para recibir noticias
     socklen_t len = sizeof(serv_addr);
     while (1) {
         int n = recvfrom(sockfd, &msg, sizeof(msg), 0, (struct sockaddr *)&serv_addr, &len);
